@@ -4,31 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
-#include <aws/core/Aws.h>
 
 DECLARE_LOG_CATEGORY_EXTERN(LogAssistant, Log, All);
 
-/**
- * Memory manager wrapper to provide the AWS SDK to use Unreal's memory management 
- * (FMemory through overloaded new/delete operators by default) for dynamic allocations
- */ 
-class MemoryManagerWrapper : public Aws::Utils::Memory::MemorySystemInterface
-{
-public:
-    void* AllocateMemory(
-        std::size_t blockSize, std::size_t alignment,
-        const char* allocationTag = nullptr) override;
-    void FreeMemory(void* memoryPtr) override;
-    void Begin() override {};
-    void End() override {};
-};
-
-/**
- * Manages the runtime resources required by the AmazonPolly Plugin. In particular, this includes
- * loading and unloading of the AWS libraries during module startup and shutdown.
- *
- * @see IModuleInterface for details
- */
 class FAssistantModule : public IModuleInterface
 {
 public:
@@ -67,18 +45,4 @@ public:
     {
         return true;
     }
-
-private:
-
-    /**
-     * Reference to Aws::SDKOptions. This is needed to make sure to pass the same
-     * instance to Aws::InitAPI and Aws::ShutdownAPI as dictated by the
-     * [AWS docs](). Using type `void *` to encapsulate implementation details of
-     * this module (i.e. including the AWS SDK headers in this module's interface).
-     */
-    void* m_sdkOptions{ nullptr };
-
-    bool m_apiInitialized{ false };
-
-    MemoryManagerWrapper m_memoryManager;
 };
