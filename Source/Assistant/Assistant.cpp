@@ -5,11 +5,6 @@
 #define LOCTEXT_NAMESPACE "FAssistantModule"
 DEFINE_LOG_CATEGORY(LogAssistant);
 
-void MemoryManagerWrapper::FreeMemory(void* memoryPtr)
-{
-    return ::operator delete(memoryPtr);
-}
-
 FAssistantModule::FAssistantModule()
 {
 }
