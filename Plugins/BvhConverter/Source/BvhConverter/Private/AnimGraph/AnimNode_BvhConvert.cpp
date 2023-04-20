@@ -1,7 +1,6 @@
 #include "AnimGraph/AnimNode_BvhConvert.h"
 #include "AnimationRuntime.h"
 #include "Animation/AnimInstanceProxy.h"
-#include "Net/UnrealNetwork.h"
 
 FAnimNode_BvhConvert::FAnimNode_BvhConvert()
 {
@@ -57,19 +56,7 @@ void FAnimNode_BvhConvert::InitRetargtor(const UAnimInstance* InAnimInstance)
 		// 3 Build Virtual Skeleton for ue skeleon，must after step 1 and 2.
 		ml_u_poser_.BuildSkeleton();
 
-		if (T_Pose_Bvh.IsEmpty() || Motion_Bvh.IsEmpty())
-		{
-			return;
-		}
-
-		ml::LoadBVH_UE4(T_Pose_Bvh, Motion_Bvh, motion_);
-
-		// 5.set Bvh bone to preset-rig mapping
-		for (auto Com : BoneMaping)
-		{
-			ml::JointTag _Tag = ml::JointTag((uint8)Com.Key - 1);
-			motion_.editable_body()->SetJointTag(TCHAR_TO_UTF8(*Com.Value.Bvh_Joint), _Tag);
-		}
+		UpdateBvhData(T_Pose_Bvh, Motion_Bvh);
 	}
 }
 
@@ -86,9 +73,35 @@ float FAnimNode_BvhConvert::GetTotalLength()
 	return motion_.size() * (1.0 / motion_.fps());
 }
 
+void FAnimNode_BvhConvert::UpdateBvhData(const FString& T_Pose, const FString& Motion)
+{
+	if (T_Pose.IsEmpty() || Motion.IsEmpty())
+	{
+		return;
+	}
+
+	T_Pose_Bvh_Cached = T_Pose;
+	Motion_Bvh_Cached = Motion;
+
+	ml::LoadBVH_UE4(T_Pose, Motion, motion_);
+
+	// 5.set Bvh bone to preset-rig mapping
+	for (auto Com : BoneMaping)
+	{
+		ml::JointTag _Tag = ml::JointTag((uint8)Com.Key - 1);
+		motion_.editable_body()->SetJointTag(TCHAR_TO_UTF8(*Com.Value.Bvh_Joint), _Tag);
+	}
+}
+
 void FAnimNode_BvhConvert::UpdateInternal(const FAnimationUpdateContext& Context)
 {
 	DECLARE_SCOPE_HIERARCHICAL_COUNTER_ANIMNODE(UpdateInternal)
+
+	if (T_Pose_Bvh_Cached != T_Pose_Bvh || Motion_Bvh_Cached != Motion_Bvh)
+	{
+		UpdateBvhData(T_Pose_Bvh, Motion_Bvh);
+	}
+
 	GetEvaluateGraphExposedInputs().Execute(Context);
 	
 	if (motion_.size() == 0)
@@ -115,7 +128,6 @@ void FAnimNode_BvhConvert::FAnimNode_BvhConvert::EvaluateSkeletalControl_AnyThre
 	DECLARE_SCOPE_HIERARCHICAL_COUNTER_ANIMNODE(EvaluateSkeletalControl_AnyThread)
 	Output.ResetToRefPose();
 
-	//遍历骨架的每根骨骼，只要CurframePose有数据就覆盖该骨骼的
 	USkeletalMeshComponent* Component = Output.AnimInstanceProxy->GetSkelMeshComponent();
 	if (Component && Component->GetSkeletalMeshAsset())
 	{
@@ -129,7 +141,6 @@ void FAnimNode_BvhConvert::FAnimNode_BvhConvert::EvaluateSkeletalControl_AnyThre
 				FTransform SourceTM = ItrMap.Value();
 
 				FCompactPoseBoneIndex CompactPoseBone = BoneContainer.GetCompactPoseIndexFromSkeletonPoseIndex(FSkeletonPoseBoneIndex(Index));
-				//FTransform NewBoneTM = Output.Pose.GetComponentSpaceTransform(CompactPoseBone);
 
 				OutBoneTransforms.Add(FBoneTransform(CompactPoseBone, SourceTM));
 			}

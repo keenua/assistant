@@ -48,20 +48,15 @@ struct BVHCONVERTER_API FAnimNode_BvhConvert : public FAnimNode_SkeletalControlB
 	GENERATED_USTRUCT_BODY()
 
 public:
-	/*这里需要BVH数据的第一帧需要是T-pose或A-pose
-	* 需要和骨架的默认姿势一致,否则会影响重定向的效果
-	*/
-	UPROPERTY(EditAnywhere, Category = Settings, meta = (PinShownByDefault))
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (PinShownByDefault))
 	FString T_Pose_Bvh = "";
 
-	UPROPERTY(EditAnywhere, Category = Settings, meta = (PinShownByDefault))
+	UPROPERTY(BlueprintReadWrite, Transient, meta = (PinShownByDefault))
 	FString Motion_Bvh = "";
 
-	//BVH 到 Skeleton 的骨架映射,类似Rig绑定得对应关系， JointTag = {BvhJoint : SkeletonBone}
 	UPROPERTY(Category = "BVH", EditAnywhere)
 	TMap<EPresetJointTag, FBoneMapConfig > BoneMaping;
 
-	/*是否循环*/
 	UPROPERTY(EditAnywhere, Category = Settings, meta = (PinHiddenByDefault))
 	bool bLoopAnimation = true;
 
@@ -72,9 +67,14 @@ public:
 	/** Accumulated time used to reference the asset in this node */
 	UPROPERTY(BlueprintReadWrite, Transient, Category = DoNotEdit)
 	float InternalTimeAccumulator = 0.0f;
+
+	void UpdateBvhData(const FString& T_Pose, const FString& Motion);
+
 private:
 	ml::Motion motion_;
 	ml::UE4Poser ml_u_poser_;
+	FString T_Pose_Bvh_Cached;
+	FString Motion_Bvh_Cached;
 
 	//BoneName，Transform
 	UPROPERTY(Transient)
