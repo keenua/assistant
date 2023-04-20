@@ -51,20 +51,15 @@ public:
 	/*这里需要BVH数据的第一帧需要是T-pose或A-pose
 	* 需要和骨架的默认姿势一致,否则会影响重定向的效果
 	*/
-	UPROPERTY(Category = "BVH", EditAnywhere)
-	FString T_Pose_Bvh_Filename = "bvh/APose.bvh";
+	UPROPERTY(EditAnywhere, Category = Settings, meta = (PinShownByDefault))
+	FString T_Pose_Bvh = "";
 
-	UPROPERTY(Category = "BVH", EditAnywhere)
-	FString Motion_Bvh_Filename = "bvh/Motion.bvh";
+	UPROPERTY(EditAnywhere, Category = Settings, meta = (PinShownByDefault))
+	FString Motion_Bvh = "";
 
 	//BVH 到 Skeleton 的骨架映射,类似Rig绑定得对应关系， JointTag = {BvhJoint : SkeletonBone}
 	UPROPERTY(Category = "BVH", EditAnywhere)
 	TMap<EPresetJointTag, FBoneMapConfig > BoneMaping;
-
-
-	//TODO：通过正则表达式自动配置boneMapping
-	//UPROPERTY(Category = "BVH", EditAnywhere)
-	//bool AutoMap = false;
 
 	/*是否循环*/
 	UPROPERTY(EditAnywhere, Category = Settings, meta = (PinHiddenByDefault))
@@ -102,7 +97,7 @@ public:
 	virtual bool IsValidToEvaluate(const USkeleton* Skeleton, const FBoneContainer& RequiredBones) override;
 
 	void InitRetargtor(const UAnimInstance* InAnimInstance);
-
+	
 	//return bvh motion length in seconds
 	float GetTotalLength();
 };

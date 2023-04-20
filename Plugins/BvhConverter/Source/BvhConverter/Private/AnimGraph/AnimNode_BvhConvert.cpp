@@ -1,7 +1,7 @@
 #include "AnimGraph/AnimNode_BvhConvert.h"
 #include "AnimationRuntime.h"
 #include "Animation/AnimInstanceProxy.h"
-
+#include "Net/UnrealNetwork.h"
 
 FAnimNode_BvhConvert::FAnimNode_BvhConvert()
 {
@@ -26,13 +26,16 @@ void FAnimNode_BvhConvert::GatherDebugData(FNodeDebugData& DebugData)
 	//Todo: Add more debug information here!
 }
 
-
 void FAnimNode_BvhConvert::OnInitializeAnimInstance(const FAnimInstanceProxy* InProxy, const UAnimInstance* InAnimInstance)
 {
 	DECLARE_SCOPE_HIERARCHICAL_COUNTER_FUNC()
 	Super::OnInitializeAnimInstance(InProxy, InAnimInstance);
 
-	InitRetargtor(InAnimInstance);
+	try {
+		InitRetargtor(InAnimInstance);
+	} catch (std::exception& e) {
+		UE_LOG(LogTemp, Error, TEXT("InitRetargtor Error: %s"), e.what());
+	}
 }
 
 void FAnimNode_BvhConvert::InitRetargtor(const UAnimInstance* InAnimInstance)
@@ -54,20 +57,12 @@ void FAnimNode_BvhConvert::InitRetargtor(const UAnimInstance* InAnimInstance)
 		// 3 Build Virtual Skeleton for ue skeleon，must after step 1 and 2.
 		ml_u_poser_.BuildSkeleton();
 
-		// 4.Load Ref-pose Bvh and motion bvh
-		FString T_pose_filename = FPaths::ProjectPluginsDir() + "BvhConverter/Content/" + T_Pose_Bvh_Filename;
-		FString Motion_filename = FPaths::ProjectPluginsDir() + "BvhConverter/Content/" + Motion_Bvh_Filename;
-		if (!FPaths::FileExists(T_pose_filename))
+		if (T_Pose_Bvh.IsEmpty() || Motion_Bvh.IsEmpty())
 		{
 			return;
 		}
 
-		if (!FPaths::FileExists(Motion_filename))
-		{
-			return;
-		}
-
-		ml::LoadBVH_UE4(T_pose_filename, Motion_filename, motion_);
+		ml::LoadBVH_UE4(T_Pose_Bvh, Motion_Bvh, motion_);
 
 		// 5.set Bvh bone to preset-rig mapping
 		for (auto Com : BoneMaping)
@@ -149,5 +144,5 @@ void FAnimNode_BvhConvert::FAnimNode_BvhConvert::EvaluateSkeletalControl_AnyThre
 
 bool FAnimNode_BvhConvert::IsValidToEvaluate(const USkeleton* Skeleton, const FBoneContainer& RequiredBones)
 {
-	return true;
+	return !T_Pose_Bvh.IsEmpty() && !Motion_Bvh.IsEmpty();
 }

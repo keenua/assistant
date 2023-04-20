@@ -72,7 +72,7 @@ namespace ml
 
 
 
-	bool LoadBVH_UE4(const char *file, Motion &out_motion, bool root_offset, bool human_load, double scale, int sample)
+	bool LoadBVH_UE4(const FString file, Motion &out_motion, bool root_offset, bool human_load, double scale, int sample)
 	{
 		//load step 2
 
@@ -90,14 +90,14 @@ namespace ml
 		ml::Motion t_motion;
 		
 
-		succeed = LoadBVH_UE4(TCHAR_TO_ANSI(*T_motion_file), t_motion, root_offset);
+		succeed = LoadBVH_UE4(T_motion_file, t_motion, root_offset);
 		if ( !succeed ) return false;
 
 		const ml::Posture &t_pose = t_motion.posture(0);
 
 		
 
-		succeed = LoadBVH_UE4(TCHAR_TO_ANSI(*file), out_motion, root_offset);
+		succeed = LoadBVH_UE4(file, out_motion, root_offset);
 		if ( !succeed ) 
 			return false;
 
@@ -121,7 +121,7 @@ namespace ml
 
 
 		ml::Motion src_motion;
-		succeed = LoadBVH_UE4(TCHAR_TO_ANSI(*file), src_motion, root_offset);
+		succeed = LoadBVH_UE4(file, src_motion, root_offset);
 		if ( !succeed ) return false;
 
 
@@ -139,7 +139,7 @@ namespace ml
 	}
 
 
-	void BVHReader::LoadBVH_UE4(const char *file, Motion *motion, bool root_offset, bool human_load, double scale, int sample)
+	void BVHReader::LoadBVH_UE4(const FString file, Motion *motion, bool root_offset, bool human_load, double scale, int sample)
 	{
 		//load step 3
 		
@@ -153,13 +153,12 @@ namespace ml
 		convert_unreal_m_inv.inverse();
 
 
-		std::ifstream in;
+		std::istringstream in(std::string(TCHAR_TO_UTF8(*file)));
 		std::string bufstr;
 
 		m_channels.clear();
 		m_joints.clear();
 		m_jointMap.clear();
-		in.open(file);
 
 		std::stack<int> nodes;
 		nodes.push(-1);

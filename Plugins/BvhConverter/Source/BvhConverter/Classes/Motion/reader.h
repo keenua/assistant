@@ -25,7 +25,7 @@ namespace ml {
 		so the root offset value in the hierarcy section must be ignored when evaluating global positions.
 		*/
 		void LoadBVH(const char *file, Motion *motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample = 1);
-		void LoadBVH_UE4(const char *file, Motion *motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample = 1);
+		void LoadBVH_UE4(const FString file, Motion *motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample = 1);
 
 		//加个辅助函数，只读Motion
 		bool LoadBVHOneMotion_UE4(FString file, TArray<float>& OutData);
@@ -44,7 +44,7 @@ namespace ml {
 	};
 
 	bool LoadBVH(const char *file, Motion &out_motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample=1);
-	bool LoadBVH_UE4(const char *file, Motion &out_motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample=1);
+	bool LoadBVH_UE4(const FString file, Motion &out_motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample=1);
 	//bool LoadBVH_UE4(FString file, Motion &out_motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample=1);
 	//Load and pasre
 	bool LoadBVH_UE4(FString T_motion_file, FString file, Motion &out_motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample=1);
