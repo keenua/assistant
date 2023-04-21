@@ -99,6 +99,7 @@ void FAnimNode_BvhConvert::UpdateInternal(const FAnimationUpdateContext& Context
 
 	if (T_Pose_Bvh_Cached != T_Pose_Bvh || Motion_Bvh_Cached != Motion_Bvh)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Updating Bvh Data"));
 		UpdateBvhData(T_Pose_Bvh, Motion_Bvh);
 	}
 
