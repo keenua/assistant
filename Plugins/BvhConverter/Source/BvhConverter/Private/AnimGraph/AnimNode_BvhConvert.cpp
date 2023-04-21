@@ -77,6 +77,7 @@ void FAnimNode_BvhConvert::UpdateBvhData(const FString& T_Pose, const FString& M
 {
 	if (T_Pose.IsEmpty() || Motion.IsEmpty())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Pose/Motion is empty"));
 		return;
 	}
 
@@ -156,5 +157,5 @@ void FAnimNode_BvhConvert::FAnimNode_BvhConvert::EvaluateSkeletalControl_AnyThre
 
 bool FAnimNode_BvhConvert::IsValidToEvaluate(const USkeleton* Skeleton, const FBoneContainer& RequiredBones)
 {
-	return !T_Pose_Bvh.IsEmpty() && !Motion_Bvh.IsEmpty();
+	return true;
 }
