@@ -61,7 +61,7 @@ void ABvhController::Tick(float DeltaTime)
 			}
 			else
 			{
-				bPlay = false;
+				InternalTimeAccumulator = GetTotalLength();
 			}
 		}
 	}
