@@ -104,8 +104,6 @@ bool ABvhController::Play(FString TPoseFile, FString BVHFile, bool bLoop)
 
 	try 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Pose file loaded: %s"), *TPoseFile);
-
 		if (ml::LoadBVH_UE4(TPoseFile, BVHFile, Motion))
 		{
 			for (auto Com : BoneMapping)
