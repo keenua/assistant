@@ -72,8 +72,28 @@ float ABvhController::GetTotalLength()
 	return Motion.size() * (1.0 / Motion.fps());
 }
 
+void ABvhController::SetSkeleton(USkeletalMeshComponent* mesh) 
+{
+	Poser = ml::UE4Poser();
+	Poser.SetUPoseableMeshComponent(mesh);
+
+	for (auto Com : BoneMapping)
+	{
+		ml::JointTag _Tag = ml::JointTag((uint8)Com.Key - 1);
+		Poser.SetJointTag(TCHAR_TO_UTF8(*Com.Value.UE_Bone), _Tag);
+	}
+
+	Poser.BuildSkeleton();
+}
+
 bool ABvhController::Play(FString TPoseFile, FString BVHFile, bool bLoop)
 {
+	if (Poser.GetJointNum() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Poser is empty inside"));
+		return false;
+	}
+
 	if (TPoseFile.IsEmpty() || BVHFile.IsEmpty())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Pose/Motion is empty inside"));
@@ -120,25 +140,14 @@ TMap<FName, FTransform> ABvhController::GetCurrentFrame(USkeletalMeshComponent* 
 		if (bPlay)
 		{
 			ml::Posture posture = Motion.GetPostureAtTime_ms(InternalTimeAccumulator);
-			ml::UE4Poser poser = ml::UE4Poser();
-			poser.SetUPoseableMeshComponent(mesh);
-
-			for (auto Com : BoneMapping)
-			{
-				ml::JointTag _Tag = ml::JointTag((uint8)Com.Key - 1);
-				poser.SetJointTag(TCHAR_TO_UTF8(*Com.Value.UE_Bone), _Tag);
-			}
-
-			poser.BuildSkeleton();
-
-			poser.Retarget(posture, CurframePose);
+			Poser.Retarget(posture, CurframePose);
 			return CurframePose;
 		}
 
-		for (auto Com : BoneMapping)
-		{
-			CurframePose.Add(FName(Com.Value.UE_Bone), FTransform());
-		}
+		// for (auto Com : BoneMapping)
+		// {
+		// 	CurframePose.Add(FName(Com.Value.UE_Bone), FTransform());
+		// }
 	}
 	catch (std::exception& e)
 	{

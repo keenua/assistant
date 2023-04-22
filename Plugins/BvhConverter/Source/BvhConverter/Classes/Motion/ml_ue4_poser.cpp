@@ -154,7 +154,7 @@ void UE4Poser::SetRestUPose()
 	for (int i = 0; i < b_names.Num(); i++)
 	{
 		int b_id = GetUBoneIndex(b_names[i]);
-		u_poseable_->BoneSpaceTransforms[b_id].SetFromMatrix(u_poseable_->SkeletalMesh->GetRefPoseMatrix(b_id));
+		u_poseable_->GetBoneSpaceTransforms()[b_id].SetFromMatrix(u_poseable_->SkeletalMesh->GetRefPoseMatrix(b_id));
 		//u_poseable_->BoneSpaceTransforms = u_poseable_->GetSkeletalMeshAsset()->GetRefSkeleton().GetRefBonePose();
 	}
 }

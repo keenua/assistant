@@ -24,7 +24,7 @@ FText UAnimGraphNode_BvhConvert::GetControllerDescription() const
 
 FText UAnimGraphNode_BvhConvert::GetTooltipText() const
 {
-	return LOCTEXT("AnimGraphNode_BvhConvert_Tooltip", "Bvh Convert to Posee");
+	return LOCTEXT("AnimGraphNode_BvhConvert_Tooltip", "Bvh Convert to Pose");
 }
 
 FText UAnimGraphNode_BvhConvert::GetNodeTitle(ENodeTitleType::Type TitleType) const

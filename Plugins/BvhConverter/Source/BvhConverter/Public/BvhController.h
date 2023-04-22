@@ -43,6 +43,7 @@ protected:
 
 private:
 	ml::Motion Motion;
+	ml::UE4Poser Poser;
 	float InternalTimeAccumulator = 0.0f;
 	bool bLoopAnimation = false;
 
@@ -58,6 +59,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TMap<FName, FTransform> GetCurrentFrame(USkeletalMeshComponent* mesh);
+
+	UFUNCTION(BlueprintCallable)
+	void SetSkeleton(USkeletalMeshComponent* mesh);
 
 	float GetTotalLength();
 
