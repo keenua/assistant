@@ -36,6 +36,46 @@ ABvhController::ABvhController()
 	BoneMapping.Add(EMyPresetJointTag::L_ANKLE, FMyBoneMapConfig{ "LeftFoot", "LeftFoot" });
 	BoneMapping.Add(EMyPresetJointTag::L_TOE, FMyBoneMapConfig{ "LeftToeBase", "LeftToeBase" });
 	BoneMapping.Add(EMyPresetJointTag::L_TOE_END, FMyBoneMapConfig{ "LeftToeBaseEnd", "LeftToeBaseEnd" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_THUMB1, FMyBoneMapConfig{ "RightHandThumb1", "RightHandThumb1" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_THUMB2, FMyBoneMapConfig{ "RightHandThumb2", "RightHandThumb2" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_THUMB3, FMyBoneMapConfig{ "RightHandThumb3", "RightHandThumb3" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_THUMB4, FMyBoneMapConfig{ "RightHandThumb4", "RightHandThumb4" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_INDEX1, FMyBoneMapConfig{ "RightHandIndex1", "RightHandIndex1" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_INDEX2, FMyBoneMapConfig{ "RightHandIndex2", "RightHandIndex2" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_INDEX3, FMyBoneMapConfig{ "RightHandIndex3", "RightHandIndex3" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_INDEX4, FMyBoneMapConfig{ "RightHandIndex4", "RightHandIndex4" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_MIDDLE1, FMyBoneMapConfig{ "RightHandMiddle1", "RightHandMiddle1" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_MIDDLE2, FMyBoneMapConfig{ "RightHandMiddle2", "RightHandMiddle2" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_MIDDLE3, FMyBoneMapConfig{ "RightHandMiddle3", "RightHandMiddle3" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_MIDDLE4, FMyBoneMapConfig{ "RightHandMiddle4", "RightHandMiddle4" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_RING1, FMyBoneMapConfig{ "RightHandRing1", "RightHandRing1" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_RING2, FMyBoneMapConfig{ "RightHandRing2", "RightHandRing2" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_RING3, FMyBoneMapConfig{ "RightHandRing3", "RightHandRing3" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_RING4, FMyBoneMapConfig{ "RightHandRing4", "RightHandRing4" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_PINKY1, FMyBoneMapConfig{ "RightHandPinky1", "RightHandPinky1" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_PINKY2, FMyBoneMapConfig{ "RightHandPinky2", "RightHandPinky2" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_PINKY3, FMyBoneMapConfig{ "RightHandPinky3", "RightHandPinky3" });
+	BoneMapping.Add(EMyPresetJointTag::R_HAND_PINKY4, FMyBoneMapConfig{ "RightHandPinky4", "RightHandPinky4" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_THUMB1, FMyBoneMapConfig{ "LeftHandThumb1", "LeftHandThumb1" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_THUMB2, FMyBoneMapConfig{ "LeftHandThumb2", "LeftHandThumb2" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_THUMB3, FMyBoneMapConfig{ "LeftHandThumb3", "LeftHandThumb3" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_THUMB4, FMyBoneMapConfig{ "LeftHandThumb4", "LeftHandThumb4" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_INDEX1, FMyBoneMapConfig{ "LeftHandIndex1", "LeftHandIndex1" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_INDEX2, FMyBoneMapConfig{ "LeftHandIndex2", "LeftHandIndex2" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_INDEX3, FMyBoneMapConfig{ "LeftHandIndex3", "LeftHandIndex3" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_INDEX4, FMyBoneMapConfig{ "LeftHandIndex4", "LeftHandIndex4" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_MIDDLE1, FMyBoneMapConfig{ "LeftHandMiddle1", "LeftHandMiddle1" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_MIDDLE2, FMyBoneMapConfig{ "LeftHandMiddle2", "LeftHandMiddle2" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_MIDDLE3, FMyBoneMapConfig{ "LeftHandMiddle3", "LeftHandMiddle3" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_MIDDLE4, FMyBoneMapConfig{ "LeftHandMiddle4", "LeftHandMiddle4" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_RING1, FMyBoneMapConfig{ "LeftHandRing1", "LeftHandRing1" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_RING2, FMyBoneMapConfig{ "LeftHandRing2", "LeftHandRing2" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_RING3, FMyBoneMapConfig{ "LeftHandRing3", "LeftHandRing3" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_RING4, FMyBoneMapConfig{ "LeftHandRing4", "LeftHandRing4" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_PINKY1, FMyBoneMapConfig{ "LeftHandPinky1", "LeftHandPinky1" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_PINKY2, FMyBoneMapConfig{ "LeftHandPinky2", "LeftHandPinky2" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_PINKY3, FMyBoneMapConfig{ "LeftHandPinky3", "LeftHandPinky3" });
+	BoneMapping.Add(EMyPresetJointTag::L_HAND_PINKY4, FMyBoneMapConfig{ "LeftHandPinky4", "LeftHandPinky4" });
 }
 
 // Called when the game starts or when spawned
