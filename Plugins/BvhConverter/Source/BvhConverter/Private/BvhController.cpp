@@ -76,6 +76,10 @@ ABvhController::ABvhController()
 	BoneMapping.Add(EMyPresetJointTag::L_HAND_PINKY2, FMyBoneMapConfig{ "LeftHandPinky2", "LeftHandPinky2" });
 	BoneMapping.Add(EMyPresetJointTag::L_HAND_PINKY3, FMyBoneMapConfig{ "LeftHandPinky3", "LeftHandPinky3" });
 	BoneMapping.Add(EMyPresetJointTag::L_HAND_PINKY4, FMyBoneMapConfig{ "LeftHandPinky4", "LeftHandPinky4" });
+	BoneMapping.Add(EMyPresetJointTag::R_FOREARM_END, FMyBoneMapConfig{ "RightForeArmEnd", "RightForeArmEnd" });
+	BoneMapping.Add(EMyPresetJointTag::R_ARM_END, FMyBoneMapConfig{ "RightArmEnd", "RightArmEnd" });
+	BoneMapping.Add(EMyPresetJointTag::L_FOREARM_END, FMyBoneMapConfig{ "LeftForeArmEnd", "LeftForeArmEnd" });
+	BoneMapping.Add(EMyPresetJointTag::L_ARM_END, FMyBoneMapConfig{ "LeftArmEnd", "LeftArmEnd" });
 }
 
 // Called when the game starts or when spawned

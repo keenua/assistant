@@ -189,10 +189,10 @@ namespace ml
 
 	void Posture::IkLimb(JointTag j_tag, const cml::vector3& pos, bool reverse)
 	{
-		if (j_tag == L_WRIST || j_tag == L_PALM) IkLimb(j_tag, L_ELBOW, L_SHOULDER, pos, reverse);
-		if (j_tag == R_WRIST || j_tag == R_PALM) IkLimb(j_tag, R_ELBOW, R_SHOULDER, pos, reverse);
-		if (j_tag == L_ANKLE || j_tag == L_FOOT) IkLimb(j_tag, L_KNEE, L_HIP, pos, reverse);
-		if (j_tag == R_ANKLE || j_tag == R_FOOT) IkLimb(j_tag, R_KNEE, R_HIP, pos, reverse);
+		if (j_tag == L_WRIST) IkLimb(j_tag, L_ELBOW, L_SHOULDER, pos, reverse);
+		if (j_tag == R_WRIST) IkLimb(j_tag, R_ELBOW, R_SHOULDER, pos, reverse);
+		if (j_tag == L_ANKLE) IkLimb(j_tag, L_KNEE, L_HIP, pos, reverse);
+		if (j_tag == R_ANKLE) IkLimb(j_tag, R_KNEE, R_HIP, pos, reverse);
 		else
 			IkLimb(body()->joint_index(j_tag), pos, reverse);
 	}

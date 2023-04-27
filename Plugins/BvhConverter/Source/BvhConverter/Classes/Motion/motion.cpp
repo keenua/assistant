@@ -458,8 +458,6 @@ namespace ml
 		GetMassForKEnergy(JointTag j_tag)
 	{
 		if (j_tag == JointTag::PELVIS) return 7.0;
-		if (j_tag == JointTag::L_PALM) return 0.3;
-		if (j_tag == JointTag::R_PALM) return 0.3;
 
 		return 1.0;
 	}
@@ -487,10 +485,6 @@ namespace ml
 
 				if (body->joint_tag(j) == JointTag::NECK ||
 					body->joint_tag(j) == JointTag::PELVIS ||
-					body->joint_tag(j) == JointTag::L_PALM ||
-					body->joint_tag(j) == JointTag::R_PALM ||
-					body->joint_tag(j) == JointTag::L_FOOT ||
-					body->joint_tag(j) == JointTag::R_FOOT ||
 					body->joint_tag(j) == JointTag::L_ELBOW ||
 					body->joint_tag(j) == JointTag::R_ELBOW ||
 					body->joint_tag(j) == JointTag::L_KNEE ||

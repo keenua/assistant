@@ -35,27 +35,21 @@ namespace ml
 		L_HIP,
 		L_KNEE,
 		L_ANKLE,
-		L_FOOT,
 		L_TOE,
 		L_TOE_END,
 		R_HIP,
 		R_KNEE,
 		R_ANKLE,
-		R_FOOT,
 		R_TOE,
 		R_TOE_END,
 		L_CLAVICLE,
 		L_SHOULDER,
 		L_ELBOW,
 		L_WRIST,
-		L_PALM,
-		L_PALM_END,
 		R_CLAVICLE,
 		R_SHOULDER,
 		R_ELBOW,
 		R_WRIST,
-		R_PALM,
-		R_PALM_END,
 		R_HAND_THUMB1,
 		R_HAND_THUMB2,
 		R_HAND_THUMB3,
@@ -95,18 +89,22 @@ namespace ml
 		L_HAND_PINKY1,
 		L_HAND_PINKY2,
 		L_HAND_PINKY3,
-		L_HAND_PINKY4
+		L_HAND_PINKY4,
+		R_FOREARM_END, 
+		R_ARM_END, 
+		L_FOREARM_END, 
+		L_ARM_END
 	};
 
-	static const int joint_tag_num = 72;
+	static const int joint_tag_num = 70;
 
 	static const std::string joint_tag_strings[joint_tag_num] =
 		{
 			"PELVIS", "SPINE", "SPINE1", "SPINE2", "CHEST", "NECK", "HEAD", "HEAD_END",
-			"L_HIP", "L_KNEE", "L_ANKLE", "L_FOOT", "L_TOE", "L_TOE_END",
-			"R_HIP", "R_KNEE", "R_ANKLE", "R_FOOT", "R_TOE", "R_TOE_END",
-			"L_CLAVICLE", "L_SHOULDER", "L_ELBOW", "L_WRIST", "L_PALM", "L_PALM_END",
-			"R_CLAVICLE", "R_SHOULDER", "R_ELBOW", "R_WRIST", "R_PALM", "R_PALM_END",
+			"L_HIP", "L_KNEE", "L_ANKLE", "L_TOE", "L_TOE_END",
+			"R_HIP", "R_KNEE", "R_ANKLE", "R_TOE", "R_TOE_END",
+			"L_CLAVICLE", "L_SHOULDER", "L_ELBOW", "L_WRIST",
+			"R_CLAVICLE", "R_SHOULDER", "R_ELBOW", "R_WRIST",
 			"R_HAND_THUMB1", "R_HAND_THUMB2", "R_HAND_THUMB3", "R_HAND_THUMB4",
 			"R_HAND_INDEX1", "R_HAND_INDEX2", "R_HAND_INDEX3", "R_HAND_INDEX4",
 			"R_HAND_MIDDLE1", "R_HAND_MIDDLE2", "R_HAND_MIDDLE3", "R_HAND_MIDDLE4",
@@ -116,7 +114,8 @@ namespace ml
 			"L_HAND_INDEX1", "L_HAND_INDEX2", "L_HAND_INDEX3", "L_HAND_INDEX4",
 			"L_HAND_MIDDLE1", "L_HAND_MIDDLE2", "L_HAND_MIDDLE3", "L_HAND_MIDDLE4",
 			"L_HAND_RING1", "L_HAND_RING2", "L_HAND_RING3", "L_HAND_RING4",
-			"L_HAND_PINKY1", "L_HAND_PINKY2", "L_HAND_PINKY3", "L_HAND_PINKY4"};
+			"L_HAND_PINKY1", "L_HAND_PINKY2", "L_HAND_PINKY3", "L_HAND_PINKY4",
+			"R_FOREARM_END", "R_ARM_END", "L_FOREARM_END", "L_ARM_END"};
 
 	struct Joint
 	{
