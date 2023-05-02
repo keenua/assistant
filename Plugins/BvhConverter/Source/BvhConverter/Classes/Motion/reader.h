@@ -26,9 +26,7 @@ namespace ml {
 		*/
 		void LoadBVH(const char *file, Motion *motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample = 1);
 		void LoadBVH_UE4(const FString file, Motion *motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample = 1);
-
-		//加个辅助函数，只读Motion
-		bool LoadBVHOneMotion_UE4(FString file, TArray<float>& OutData);
+		void AddBvhMotion(std::ifstream &in, Motion *motion, double scale=1.0, int sample = 1);
 
 	protected:
 		//enum Channel { XPOS = 1, YPOS, ZPOS, ZROT, XROT, YROT };

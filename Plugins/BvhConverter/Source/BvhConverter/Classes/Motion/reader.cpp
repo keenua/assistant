@@ -404,79 +404,76 @@ namespace ml
 		in >> bufstr;
 		in >> ftime;
 
-		motion->size(fcount / sample);
 		motion->fps(std::round(1. / ftime));
 
 		Posture p(m_joints.size());
 		p.body(motion->body());
 
-		double time = 0.;
-
 		for (int i = 0; i < fcount; i++) {
-			int joint_index = 0;
-			size_t channel_index = 0;
-			double value;
-
-			matrix3 rotate = identity_mat();
-			vector3 trans(0, 0, 0);
-			for (int j = 0; j < num_channels; ++j) {
-				in >> value;
-
-				while (channel_index >= (int)m_channels[joint_index].size()) {
-					++joint_index;
-					channel_index = 0;
-				}
-				switch (m_channels[joint_index][channel_index]) {
-				case XPOS:
-					trans[0] += value * scale;
-					break;
-				case YPOS:
-					trans[1] += value * scale;
-					break;
-				case ZPOS:
-					trans[2] += value * scale;
-					break;
-				case XROT:
-					rotate *= rotx_mat(deg2rad(value));
-					break;
-				case YROT:
-					rotate *= roty_mat(deg2rad(value));
-					break;
-				case ZROT:
-					rotate *= rotz_mat(deg2rad(value));
-					break;
-				}
-				++channel_index;
-				if (channel_index >= m_channels[joint_index].size()) {
-					/// ignore translate term if the joint is not root
-					if (joint_index == 0) {
-						p.trans(trans);
-						trans.zero();
-					}
-					p.rotate(joint_index, rotate);
-					rotate.identity();
-				}
-			}
-			p.time = time;
-			time += 1.0;
-			motion->posture(i / sample, p);
+			this->AddBvhMotion(in, motion, scale, sample);
 		}
 	}
 
-	bool BVHReader::LoadBVHOneMotion_UE4(FString file, TArray<float>& OutData)
+	void BVHReader::AddBvhMotion(std::ifstream &in, Motion* motion, double scale, int sample) 
 	{
-		std::ifstream in;
-		std::string bufstr;
-		in.open(TCHAR_TO_ANSI(*file));
-		in >> bufstr; //Motion
-		while (in) {
-			float temp;
-			in >> temp;
-			OutData.Add(temp);
+		int fcount = motion->size();
+		double time = 0.;
+		if (fcount > 0) {
+			time = motion->posture(fcount - 1).time + 1.0;
 		}
-		return true;
-	}
+		motion->size((fcount + 1) / sample);
+		auto num_channels = motion->num_channels;
 
+		int joint_index = 0;
+		size_t channel_index = 0;
+		double value;
+
+		Posture p(m_joints.size());
+		p.body(motion->body());
+
+		matrix3 rotate = identity_mat();
+		vector3 trans(0, 0, 0);
+		for (int j = 0; j < num_channels; ++j) {
+			in >> value;
+
+			while (channel_index >= (int)m_channels[joint_index].size()) {
+				++joint_index;
+				channel_index = 0;
+			}
+			switch (m_channels[joint_index][channel_index]) {
+			case XPOS:
+				trans[0] += value * scale;
+				break;
+			case YPOS:
+				trans[1] += value * scale;
+				break;
+			case ZPOS:
+				trans[2] += value * scale;
+				break;
+			case XROT:
+				rotate *= rotx_mat(deg2rad(value));
+				break;
+			case YROT:
+				rotate *= roty_mat(deg2rad(value));
+				break;
+			case ZROT:
+				rotate *= rotz_mat(deg2rad(value));
+				break;
+			}
+			++channel_index;
+			if (channel_index >= m_channels[joint_index].size()) {
+				/// ignore translate term if the joint is not root
+				if (joint_index == 0) {
+					p.trans(trans);
+					trans.zero();
+				}
+				p.rotate(joint_index, rotate);
+				rotate.identity();
+			}
+		}
+		p.time = time;
+		motion->posture(fcount / sample, p);
+	}
 
 	int AMCReader::NewNode(const std::string& name)
 	{
