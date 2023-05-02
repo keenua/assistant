@@ -138,7 +138,6 @@ namespace ml
 		return succeed;
 	}
 
-
 	void BVHReader::LoadBVH_UE4(const FString file, Motion *motion, bool root_offset, bool human_load, double scale, int sample)
 	{
 		//load step 3
@@ -414,7 +413,7 @@ namespace ml
 		}
 	}
 
-	void BVHReader::AddBvhMotion(std::ifstream &in, Motion* motion, double scale, int sample) 
+	void BVHReader::AddBvhMotion(std::istream &in, Motion* motion, double scale, int sample) 
 	{
 		int fcount = motion->size();
 		double time = 0.;
@@ -473,6 +472,12 @@ namespace ml
 		}
 		p.time = time;
 		motion->posture(fcount / sample, p);
+	}
+
+	void BVHReader::AddBvhMotion(const FString bvh_motion, Motion *motion, double scale, int sample) 
+	{
+		std::istringstream in(std::string(TCHAR_TO_UTF8(*bvh_motion)));
+		AddBvhMotion(in, motion, scale, sample);
 	}
 
 	int AMCReader::NewNode(const std::string& name)

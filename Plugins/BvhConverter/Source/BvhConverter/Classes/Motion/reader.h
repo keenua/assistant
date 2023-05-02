@@ -26,7 +26,8 @@ namespace ml {
 		*/
 		void LoadBVH(const char *file, Motion *motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample = 1);
 		void LoadBVH_UE4(const FString file, Motion *motion, bool root_offset=false, bool human_load=true, double scale=1.0, int sample = 1);
-		void AddBvhMotion(std::ifstream &in, Motion *motion, double scale=1.0, int sample = 1);
+		void AddBvhMotion(std::istream &in, Motion *motion, double scale=1.0, int sample = 1);
+		void AddBvhMotion(const FString bvh_motion, Motion *motion, double scale=1.0, int sample =1);
 
 	protected:
 		//enum Channel { XPOS = 1, YPOS, ZPOS, ZROT, XROT, YROT };

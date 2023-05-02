@@ -160,6 +160,7 @@ bool ABvhController::Play(FString TPoseFile, FString BVHFile, bool bLoop)
 			bPlay = true;
 			bLoopAnimation = bLoop;
 			InternalTimeAccumulator = 0.0f;
+			FrameOffset = Motion.size();
 
 			UE_LOG(LogTemp, Warning, TEXT("Pose fully loaded!"));
 			return true;
@@ -173,6 +174,11 @@ bool ABvhController::Play(FString TPoseFile, FString BVHFile, bool bLoop)
 	return false;
 }
 
+void ABvhController::AddMotion(const FString motion) 
+{
+ 	Reader.AddBvhMotion(motion, &Motion);
+}
+
 TMap<FName, FTransform> ABvhController::GetCurrentFrame(USkeletalMeshComponent* mesh)
 {
 	TMap<FName, FTransform> CurframePose = TMap<FName, FTransform>(); 
@@ -183,13 +189,14 @@ TMap<FName, FTransform> ABvhController::GetCurrentFrame(USkeletalMeshComponent* 
 		{
 			ml::Posture posture = Motion.GetPostureAtTime_ms(InternalTimeAccumulator);
 			Poser.Retarget(posture, CurframePose);
+			const int frame_id = (int)(Motion.fps() * InternalTimeAccumulator) - FrameOffset;
+
+			if (frame_id >= 0)
+			{
+				OnFramePlayed.Broadcast(frame_id);
+			}
 			return CurframePose;
 		}
-
-		// for (auto Com : BoneMapping)
-		// {
-		// 	CurframePose.Add(FName(Com.Value.UE_Bone), FTransform());
-		// }
 	}
 	catch (std::exception& e)
 	{

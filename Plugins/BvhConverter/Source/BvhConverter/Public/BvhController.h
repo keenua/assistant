@@ -38,6 +38,8 @@ struct FMyBoneMapConfig
 		FString UE_Bone;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFrame, const int, FrameIndex);
+
 UCLASS()
 class BVHCONVERTER_API ABvhController : public AActor
 {
@@ -55,8 +57,10 @@ protected:
 private:
 	ml::Motion Motion;
 	ml::UE4Poser Poser;
+	ml::BVHReader Reader;
 	float InternalTimeAccumulator = 0.0f;
 	bool bLoopAnimation = false;
+	int FrameOffset = 0;
 
 public:	
 	// Called every frame
@@ -73,6 +77,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetSkeleton(USkeletalMeshComponent* mesh);
+
+	UFUNCTION(BlueprintCallable)
+	void AddMotion(const FString motion);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnFrame OnFramePlayed;
 
 	float GetTotalLength();
 
