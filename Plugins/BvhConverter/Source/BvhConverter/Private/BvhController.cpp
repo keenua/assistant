@@ -146,29 +146,22 @@ bool ABvhController::Play(FString TPoseFile, FString BVHFile, bool bLoop)
 
 	UE_LOG(LogTemp, Warning, TEXT("Playing this shit now"));
 
-	try 
+	if (ml::LoadBVH_UE4(TPoseFile, BVHFile, Motion))
 	{
-		if (ml::LoadBVH_UE4(TPoseFile, BVHFile, Motion))
+		for (auto Com : BoneMapping)
 		{
-			for (auto Com : BoneMapping)
-			{
-				ml::JointTag _Tag = ml::JointTag((uint8)Com.Key - 1);
-				Motion.editable_body()->SetJointTag(TCHAR_TO_UTF8(*Com.Value.Bvh_Joint), _Tag);
-			}
-
-
-			bPlay = true;
-			bLoopAnimation = bLoop;
-			InternalTimeAccumulator = 0.0f;
-			FrameOffset = Motion.size();
-
-			UE_LOG(LogTemp, Warning, TEXT("Pose fully loaded!"));
-			return true;
+			ml::JointTag _Tag = ml::JointTag((uint8)Com.Key - 1);
+			Motion.editable_body()->SetJointTag(TCHAR_TO_UTF8(*Com.Value.Bvh_Joint), _Tag);
 		}
-	} 
-	catch (std::exception& e)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Play Error: %s"), e.what());
+
+
+		bPlay = true;
+		bLoopAnimation = bLoop;
+		InternalTimeAccumulator = 0.0f;
+		FrameOffset = Motion.size();
+
+		UE_LOG(LogTemp, Warning, TEXT("Pose fully loaded!"));
+		return true;
 	}
 
 	return false;
@@ -183,24 +176,17 @@ TMap<FName, FTransform> ABvhController::GetCurrentFrame(USkeletalMeshComponent* 
 {
 	TMap<FName, FTransform> CurframePose = TMap<FName, FTransform>(); 
 
-	try 
+	if (bPlay)
 	{
-		if (bPlay)
-		{
-			ml::Posture posture = Motion.GetPostureAtTime_ms(InternalTimeAccumulator);
-			Poser.Retarget(posture, CurframePose);
-			const int frame_id = (int)(Motion.fps() * InternalTimeAccumulator) - FrameOffset;
+		ml::Posture posture = Motion.GetPostureAtTime_ms(InternalTimeAccumulator);
+		Poser.Retarget(posture, CurframePose);
+		const int frame_id = (int)(Motion.fps() * InternalTimeAccumulator) - FrameOffset;
 
-			if (frame_id >= 0)
-			{
-				OnFramePlayed.Broadcast(frame_id);
-			}
-			return CurframePose;
+		if (frame_id >= 0)
+		{
+			OnFramePlayed.Broadcast(frame_id);
 		}
-	}
-	catch (std::exception& e)
-	{
-		UE_LOG(LogTemp, Error, TEXT("GetCurrentFrame Error: %s"), e.what());
+		return CurframePose;
 	}
 
 	return CurframePose;
