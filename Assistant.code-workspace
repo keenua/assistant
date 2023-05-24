@@ -134,7 +134,8 @@
 			"__tuple": "cpp",
 			"string_view": "cpp",
 			"__memory": "cpp",
-			"alignedvector3": "cpp"
+			"alignedvector3": "cpp",
+			"adolcforward": "cpp"
 		}
 	},
 	"extensions": {

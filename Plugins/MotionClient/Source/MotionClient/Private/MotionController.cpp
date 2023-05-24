@@ -1,4 +1,5 @@
 #include "MotionController.h"
+#include "Viseme.h"
 
 AMotionController::AMotionController()
 {
@@ -132,7 +133,8 @@ void AMotionController::Tick(float DeltaTime)
 	if (Viseme != "")
 	{
 		UE_LOG(LogTemp, Warning, TEXT("OnVisemeReady.Broadcast(Viseme)"));
-		OnVisemeReady.Broadcast(Viseme);
+		EViseme VisemeValue = GetVisemeValueFromString(Viseme);
+		OnVisemeReady.Broadcast(VisemeValue);
 	}
 }
 

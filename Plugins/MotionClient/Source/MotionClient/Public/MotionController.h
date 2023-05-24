@@ -5,10 +5,11 @@
 #include "MotionSkeleton.h"
 #include "MotionFrame.h"
 #include "RuntimeAudioImporterLibrary.h"
+#include "Viseme.h"
 #include "MotionController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundReady, const TArray<uint8>&, SoundBytes);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVisemeReady, const FString&, Viseme);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVisemeReady, EViseme, Viseme);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmotionReady, const FString&, Emotion);
 
 UCLASS()
