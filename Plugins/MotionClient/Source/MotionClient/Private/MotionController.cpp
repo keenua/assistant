@@ -20,7 +20,7 @@ void AMotionController::Tick(float DeltaTime)
 	// Peek first frame
 	TSharedPtr<FMotionFrame> Frame;
 
-	if (FrameTime == 0.0f && !FrameBuffer.Peek(Frame))
+	if (FrameTime < 0.001f && !FrameBuffer.Peek(Frame))
 	{
 		return;
 	}
@@ -33,51 +33,7 @@ void AMotionController::Tick(float DeltaTime)
 	FString Viseme = "";
 	FString Emotion = "";
 
-	TArray<TSharedPtr<FMotionFrame>> TempFrames;
-
-	bool bGapFound = false;
-	bool bAudioStarted = false;
-
 	int Bitrate = 16000;
-
-	while (FrameBuffer.Peek(Frame))
-	{
-		FrameBuffer.Dequeue(Frame);
-		TempFrames.Add(Frame);
-
-		if (Frame->Audio.Num() > 0 && !bGapFound)
-		{
-			if (Frame->Index > LastAddedAudioFrame)
-			{
-				if (Frame->Index - LastAddedAudioFrame > 5 && bAudioStarted)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Gap of %d found at %d"), Frame->Index - LastAddedAudioFrame, Frame->Index);
-					bGapFound = true;
-				}
-				else
-				{
-					if (!bAudioStarted && Frame->Index > ExpectedFrameIndex) 
-					{
-						continue;
-					}
-
-					bAudioStarted = true;
-					UE_LOG(LogTemp, Warning, TEXT("Adding audio frame %d"), Frame->Index);
-					ImportedSoundWave.Append(Frame->Audio);
-					int AudioLength = Frame->Audio.Num() / Bitrate * FPS;
-					LastAddedAudioFrame = Frame->Index + AudioLength;
-				}
-			}
-		}
-	}
-
-	// Add frames back to buffer
-	for (int i = 0; i < TempFrames.Num(); i++)
-	{
-		FrameBuffer.Enqueue(TempFrames[i]);
-	}
-
-	TempFrames.Empty();
 
 	if (FrameBuffer.Peek(Frame) && Frame->Index <= ExpectedFrameIndex)
 	{
@@ -92,6 +48,11 @@ void AMotionController::Tick(float DeltaTime)
 		if (Frame->Viseme != "")
 		{
 			Viseme = Frame->Viseme;
+		}
+
+		if (Frame->Audio.Num() > 0)
+		{
+			ImportedSoundWave.Append(Frame->Audio);
 		}
 
 		bFrameAvailable = true;
