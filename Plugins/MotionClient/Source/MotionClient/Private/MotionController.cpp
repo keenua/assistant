@@ -88,7 +88,8 @@ void AMotionController::Tick(float DeltaTime)
 	if (Emotion != "")
 	{
 		UE_LOG(LogTemp, Warning, TEXT("OnEmotionReady.Broadcast(Emotion)"));
-		OnEmotionReady.Broadcast(Emotion);
+		EEmotion EmotionValue = GetEmotionValueFromString(Emotion);
+		OnEmotionReady.Broadcast(EmotionValue);
 	}
 
 	if (Viseme != "")

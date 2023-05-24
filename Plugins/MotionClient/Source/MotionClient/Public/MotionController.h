@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Emotion.h"
 #include "Engine.h"
 #include "GameFramework/Actor.h"
 #include "MotionSkeleton.h"
@@ -10,7 +11,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundReady, const TArray<uint8>&, SoundBytes);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVisemeReady, EViseme, Viseme);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmotionReady, const FString&, Emotion);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmotionReady, const EEmotion, Emotion);
 
 UCLASS()
 class MOTIONCLIENT_API AMotionController : public AActor
