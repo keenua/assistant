@@ -93,6 +93,8 @@ class MOTIONCLIENT_API UMotionLibrary : public UBlueprintFunctionLibrary
 
 		UFUNCTION(BlueprintCallable, Category = "Motion Client", meta = (DisplayName = "Add Motion Frames", ToolTip = "Add motion frames to the motion controller."))
 		static bool AddFrames(AMotionController *Controller, TArray<FMotionFrame> Frames);
+		UFUNCTION(BlueprintCallable, Category = "Motion Client", meta = (DisplayName = "Correct Frame", ToolTip = "Correct frame offset for the motion controller."))
+		static void CorrectFrame(AMotionController *Controller, int SoundPlayedFrameIndex);
 		UFUNCTION(BlueprintCallable, Category = "Motion Client", meta = (DisplayName = "Add Motion Frames From File", ToolTip = "Add motion frames to the motion controller from BVH file."))
 		static bool AddFramesFromFile(AMotionController *Controller, const FString BVHFileName);
 

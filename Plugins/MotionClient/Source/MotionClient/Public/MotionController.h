@@ -9,7 +9,7 @@
 #include "Viseme.h"
 #include "MotionController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSoundReady, const TArray<uint8>&, SoundBytes);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSoundReady, const TArray<uint8>&, SoundBytes, int, FrameIndex);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVisemeReady, EViseme, Viseme);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmotionReady, const EEmotion, Emotion);
 
@@ -28,6 +28,7 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
     void AddFrames(TArray<TSharedPtr<FMotionFrame>> Frames);
+	void CorrectFrame(int SoundPlayedFrameIndex);
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSoundReady OnSoundReady;
@@ -62,4 +63,5 @@ private:
     float FrameTime = 0.0f;
     int CurrentFrame = 0;
 	int LastAddedAudioFrame = 0;
+	float LastDelta = 0.0f;
 };

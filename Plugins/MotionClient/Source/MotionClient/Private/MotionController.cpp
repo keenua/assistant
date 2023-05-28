@@ -27,6 +27,7 @@ void AMotionController::Tick(float DeltaTime)
 
 	bPlaying = true;
 	FrameTime += DeltaTime;
+	LastDelta = DeltaTime;
 	int ExpectedFrameIndex = (int)(FrameTime / (1 / FPS));
 	bool bFrameAvailable = false;
 	TArray<uint8> ImportedSoundWave;
@@ -34,6 +35,7 @@ void AMotionController::Tick(float DeltaTime)
 	FString Emotion = "";
 
 	int Bitrate = 16000;
+	int SoundFrameIndex = 0;
 
 	if (FrameBuffer.Peek(Frame) && Frame->Index <= ExpectedFrameIndex)
 	{
@@ -52,6 +54,10 @@ void AMotionController::Tick(float DeltaTime)
 
 		if (Frame->Audio.Num() > 0)
 		{
+			if (SoundFrameIndex == 0)
+			{
+				SoundFrameIndex = Frame->Index;
+			}
 			ImportedSoundWave.Append(Frame->Audio);
 		}
 
@@ -82,7 +88,7 @@ void AMotionController::Tick(float DeltaTime)
 	if (ImportedSoundWave.Num() > 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("OnSoundReady.Broadcast(ImportedSoundWave)"));
-		OnSoundReady.Broadcast(ImportedSoundWave);
+		OnSoundReady.Broadcast(ImportedSoundWave, SoundFrameIndex);
 	}
 
 	if (Emotion != "")
@@ -107,4 +113,11 @@ void AMotionController::AddFrames(TArray<TSharedPtr<FMotionFrame>> Frames)
 	{
 		FrameBuffer.Enqueue(Frames[i]);
 	}
+}
+
+void AMotionController::CorrectFrame(int SoundPlayedFrameIndex)
+{
+	int ExpectedFrameIndex = (int)((FrameTime + LastDelta) / (1 / FPS));
+	int delta = SoundPlayedFrameIndex - ExpectedFrameIndex;
+	FrameTime += delta * (1 / FPS);
 }
