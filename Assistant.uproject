@@ -23,25 +23,12 @@
 			"Enabled": true
 		},
 		{
-			"Name": "AppleARKitFaceSupport",
-			"Enabled": true,
-			"SupportedTargetPlatforms": [
-				"IOS",
-				"Win64",
-				"Mac"
-			]
-		},
-		{
-			"Name": "LiveLinkControlRig",
-			"Enabled": true
-		},
-		{
 			"Name": "HairStrands",
 			"Enabled": true
 		},
 		{
 			"Name": "RLLiveLink",
-			"Enabled": true,
+			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/f6a79afa7d0e4d429be8b993f7b6f5ad"
 		},
 		{

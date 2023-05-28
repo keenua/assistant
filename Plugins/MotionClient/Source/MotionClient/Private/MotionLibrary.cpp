@@ -32,7 +32,6 @@ bool UMotionLibrary::AddFramesFromFile(AMotionController *Controller, const FStr
 		return false;
 	}
 
-
 	// Load BVH file
 	TArray<FString> Lines;
 	if (FFileHelper::LoadANSITextFileToStrings(*(FPaths::ProjectContentDir() + BVHFileName), NULL, Lines) != true)
