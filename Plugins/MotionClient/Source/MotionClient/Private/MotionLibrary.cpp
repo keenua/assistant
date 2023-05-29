@@ -243,7 +243,7 @@ bool UMotionLibrary::AddFrames(AMotionController *Controller, TArray<FMotionFram
     return true;
 }
 
-void UMotionLibrary::CorrectFrame(AMotionController *Controller, int SoundPlayedFrameIndex)
+void UMotionLibrary::CorrectFrame(AMotionController *Controller, int SoundPlayedFrameIndex, float Duration, float PlaybackTime, int AudioBytes)
 {
 	if (Controller == nullptr)
 	{
@@ -254,7 +254,7 @@ void UMotionLibrary::CorrectFrame(AMotionController *Controller, int SoundPlayed
 		return;
 	}
 
-	Controller->CorrectFrame(SoundPlayedFrameIndex);
+	Controller->CorrectFrame(SoundPlayedFrameIndex, Duration, PlaybackTime, AudioBytes);
 }
 
 int32 UMotionLibrary::GetBVHBoneIndex(EBonesEnum BVHBone)

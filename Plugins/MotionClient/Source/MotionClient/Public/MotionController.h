@@ -12,6 +12,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSoundReady, const TArray<uint8>&, SoundBytes, int, FrameIndex);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVisemeReady, EViseme, Viseme);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmotionReady, const EEmotion, Emotion);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFirstFramePlayed);
 
 UCLASS()
 class MOTIONCLIENT_API AMotionController : public AActor
@@ -28,7 +29,7 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
     void AddFrames(TArray<TSharedPtr<FMotionFrame>> Frames);
-	void CorrectFrame(int SoundPlayedFrameIndex);
+	void CorrectFrame(int SoundPlayedFrameIndex, float Duration, float PlaybackTime, int AudioBytes);
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSoundReady OnSoundReady;
@@ -38,6 +39,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnEmotionReady OnEmotionReady;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnFirstFramePlayed OnFirstFramePlayed;
 
 public:
 	MotionSkeleton Skeleton;

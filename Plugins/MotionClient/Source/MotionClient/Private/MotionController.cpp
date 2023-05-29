@@ -34,7 +34,6 @@ void AMotionController::Tick(float DeltaTime)
 	FString Viseme = "";
 	FString Emotion = "";
 
-	int Bitrate = 16000;
 	int SoundFrameIndex = 0;
 
 	if (FrameBuffer.Peek(Frame) && Frame->Index <= ExpectedFrameIndex)
@@ -104,6 +103,8 @@ void AMotionController::Tick(float DeltaTime)
 		EViseme VisemeValue = GetVisemeValueFromString(Viseme);
 		OnVisemeReady.Broadcast(VisemeValue);
 	}
+
+	OnFirstFramePlayed.Broadcast();
 }
 
 void AMotionController::AddFrames(TArray<TSharedPtr<FMotionFrame>> Frames)
@@ -115,9 +116,15 @@ void AMotionController::AddFrames(TArray<TSharedPtr<FMotionFrame>> Frames)
 	}
 }
 
-void AMotionController::CorrectFrame(int SoundPlayedFrameIndex)
+void AMotionController::CorrectFrame(int SoundPlayedFrameIndex, float Duration, float PlaybackTime, int AudioBytes)
 {
-	int ExpectedFrameIndex = (int)((FrameTime + LastDelta) / (1 / FPS));
-	int delta = SoundPlayedFrameIndex - ExpectedFrameIndex;
-	FrameTime += delta * (1 / FPS);
+	float LeftToPlay = Duration - PlaybackTime;
+	float ClipDuration = (float)AudioBytes / 2 / 44100;
+	float Delta = LeftToPlay - ClipDuration;
+
+	int DeltaFrames = (int)(Delta * FPS);
+	int AudioPlayedAtFrame = (int)(PlaybackTime * FPS) + DeltaFrames;
+
+	int SoundDeltaFrames = SoundPlayedFrameIndex - AudioPlayedAtFrame;
+	FrameTime += SoundDeltaFrames * (1 / FPS);
 }
