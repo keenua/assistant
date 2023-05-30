@@ -243,18 +243,9 @@ bool UMotionLibrary::AddFrames(AMotionController *Controller, TArray<FMotionFram
     return true;
 }
 
-void UMotionLibrary::CorrectFrame(AMotionController *Controller, int SoundPlayedFrameIndex, float Duration, float PlaybackTime, int AudioBytes)
+void UMotionLibrary::SetSoundWave(AMotionController *Controller, UStreamingSoundWave *SoundWave)
 {
-	if (Controller == nullptr)
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Controller is invalid. (Correct Frame)")));
-		}
-		return;
-	}
-
-	Controller->CorrectFrame(SoundPlayedFrameIndex, Duration, PlaybackTime, AudioBytes);
+	Controller->SoundWave = SoundWave;
 }
 
 int32 UMotionLibrary::GetBVHBoneIndex(EBonesEnum BVHBone)

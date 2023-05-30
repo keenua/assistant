@@ -6,6 +6,8 @@
 #include "MotionSkeleton.h"
 #include "MotionFrame.h"
 #include "RuntimeAudioImporterLibrary.h"
+#include "RuntimeAudioImporterTypes.h"
+#include "Sound/StreamingSoundWave.h"
 #include "Viseme.h"
 #include "MotionController.generated.h"
 
@@ -29,10 +31,6 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
     void AddFrames(TArray<TSharedPtr<FMotionFrame>> Frames);
-	void CorrectFrame(int SoundPlayedFrameIndex, float Duration, float PlaybackTime, int AudioBytes);
-
-	UPROPERTY(BlueprintAssignable)
-	FOnSoundReady OnSoundReady;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnVisemeReady OnVisemeReady;
@@ -45,6 +43,7 @@ public:
 
 public:
 	MotionSkeleton Skeleton;
+	UStreamingSoundWave* SoundWave;
 
 	// Map bone coordinate system (Used for VE_Map)
 	typedef struct BoneMap
@@ -61,11 +60,13 @@ public:
     bool bPlaying = false;
 
 private:
-    TQueue<TSharedPtr<FMotionFrame>> FrameBuffer;
+    TArray<TSharedPtr<FMotionFrame>> FrameBuffer;
 
     float FPS = 60.0f;
-    float FrameTime = 0.0f;
-    int CurrentFrame = 0;
-	int LastAddedAudioFrame = 0;
+	float FrameTime = 0.0f;
+	int LastProcessedAudioFrame = -1;
 	float LastDelta = 0.0f;
+
+	void ProcessAudio();
+	void ProcessAnimation();
 };

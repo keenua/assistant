@@ -12,34 +12,46 @@ void AMotionController::BeginPlay()
 	Super::BeginPlay();
 }
 
-// Called every frame
-void AMotionController::Tick(float DeltaTime)
+void AMotionController::ProcessAudio()
 {
-	Super::Tick(DeltaTime);
+	// For each frame in TArray FrameBuffer
+	for (int i = 0; i < FrameBuffer.Num(); i++)
+	{
+		TSharedPtr<FMotionFrame> Frame = FrameBuffer[i];
 
-	// Peek first frame
-	TSharedPtr<FMotionFrame> Frame;
+		if (LastProcessedAudioFrame >= Frame->Index)
+		{
+			continue;
+		}
 
-	if (FrameTime < 0.001f && !FrameBuffer.Peek(Frame))
+		// If frame has audio
+		if (Frame->Audio.Num() > 0)
+		{
+			// Append audio to sound wave
+			SoundWave->AppendAudioDataFromEncoded(Frame->Audio, ERuntimeAudioFormat::Auto);
+		}
+
+		LastProcessedAudioFrame = Frame->Index;
+	}
+}
+
+void AMotionController::ProcessAnimation()
+{
+	int ExpectedFrameIndex = (int)(FrameTime / (1 / FPS));
+	bool bFrameAvailable = false;
+	FString Viseme = "";
+	FString Emotion = "";
+
+	if (FrameBuffer.Num() == 0)
 	{
 		return;
 	}
 
-	bPlaying = true;
-	FrameTime += DeltaTime;
-	LastDelta = DeltaTime;
-	int ExpectedFrameIndex = (int)(FrameTime / (1 / FPS));
-	bool bFrameAvailable = false;
-	TArray<uint8> ImportedSoundWave;
-	FString Viseme = "";
-	FString Emotion = "";
-
-	int SoundFrameIndex = 0;
-
-	if (FrameBuffer.Peek(Frame) && Frame->Index <= ExpectedFrameIndex)
+	TSharedPtr<FMotionFrame> Frame;
+	while (FrameBuffer.Num() > 0 && FrameBuffer[0]-> Index <= ExpectedFrameIndex)
 	{
-		// Dequeue frame
-		FrameBuffer.Dequeue(Frame);
+		Frame = FrameBuffer[0];
+		FrameBuffer.RemoveAt(0);
 
 		if (Frame->Emotion != "")
 		{
@@ -50,20 +62,9 @@ void AMotionController::Tick(float DeltaTime)
 		{
 			Viseme = Frame->Viseme;
 		}
-
-		if (Frame->Audio.Num() > 0)
-		{
-			if (SoundFrameIndex == 0)
-			{
-				SoundFrameIndex = Frame->Index;
-			}
-			ImportedSoundWave.Append(Frame->Audio);
-		}
-
-		bFrameAvailable = true;
 	}
 
-	if (bFrameAvailable)
+	if (Frame != nullptr)
 	{
 		FString Motion = Frame->Motion;
 
@@ -84,47 +85,48 @@ void AMotionController::Tick(float DeltaTime)
 		}
 	}
 
-	if (ImportedSoundWave.Num() > 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("OnSoundReady.Broadcast(ImportedSoundWave)"));
-		OnSoundReady.Broadcast(ImportedSoundWave, SoundFrameIndex);
-	}
-
 	if (Emotion != "")
 	{
-		UE_LOG(LogTemp, Warning, TEXT("OnEmotionReady.Broadcast(Emotion)"));
 		EEmotion EmotionValue = GetEmotionValueFromString(Emotion);
 		OnEmotionReady.Broadcast(EmotionValue);
 	}
 
 	if (Viseme != "")
 	{
-		UE_LOG(LogTemp, Warning, TEXT("OnVisemeReady.Broadcast(Viseme)"));
 		EViseme VisemeValue = GetVisemeValueFromString(Viseme);
 		OnVisemeReady.Broadcast(VisemeValue);
 	}
+}
 
-	OnFirstFramePlayed.Broadcast();
+// Called every frame
+void AMotionController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (SoundWave == nullptr)
+	{
+		return;
+	}
+	
+	FrameTime = SoundWave->GetPlaybackTime();
+
+	if (FrameTime < 0.001f && FrameBuffer.Num() == 0)
+	{
+		return;
+	}
+
+	if (!bPlaying)
+	{
+		OnFirstFramePlayed.Broadcast();
+	}
+
+	bPlaying = true;
+	ProcessAudio();
+	ProcessAnimation();
 }
 
 void AMotionController::AddFrames(TArray<TSharedPtr<FMotionFrame>> Frames)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Adding %d frames"), Frames.Num());
-	for (int i = 0; i < Frames.Num(); i++)
-	{
-		FrameBuffer.Enqueue(Frames[i]);
-	}
-}
-
-void AMotionController::CorrectFrame(int SoundPlayedFrameIndex, float Duration, float PlaybackTime, int AudioBytes)
-{
-	float LeftToPlay = Duration - PlaybackTime;
-	float ClipDuration = (float)AudioBytes / 2 / 44100;
-	float Delta = LeftToPlay - ClipDuration;
-
-	int DeltaFrames = (int)(Delta * FPS);
-	int AudioPlayedAtFrame = (int)(PlaybackTime * FPS) + DeltaFrames;
-
-	int SoundDeltaFrames = SoundPlayedFrameIndex - AudioPlayedAtFrame;
-	FrameTime += SoundDeltaFrames * (1 / FPS);
+	FrameBuffer.Append(Frames);
 }
